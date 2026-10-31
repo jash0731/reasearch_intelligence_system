@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block title %}Sign in{% endblock %}{% block content %}<div class="auth-layout">
+<section class="auth-intro">
+<h1>Sign in</h1>
+<p class="lead">Sign in to use a linked faculty profile by default. Browsing does not require an account.</p>
+<a class="text-link" href="{{ url_for('collaborators') }}">Explore without signing in →</a>
+</section>
+<section class="auth-card">
+<h2>Sign in</h2>{% if error %}<div class="error-message" role="alert">{{ error }}</div>{% endif %}<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<input type="hidden" name="next" value="{{ request.args.get('next','') }}">
+<label for="username">Username</label>
+<input id="username" name="username" required autocomplete="username">
+<label for="password">Password</label>
+<input id="password" name="password" type="password" required autocomplete="current-password">
+<button class="button button-full" type="submit">Sign in →</button>
+</form>
+<p class="auth-switch">New here? <a href="{{ url_for('register') }}">Link a faculty profile</a>
+</p>
+</section>
+</div>{% endblock %}

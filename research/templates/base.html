@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#164b3c">
+<title>{% block title %}Research connections{% endblock %} · VIT</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="header-inner">
+<a class="brand" href="{{ url_for('collaborators') }}" aria-label="VIT Research connections home">
+<span class="brand-mark">V</span>
+<span>
+<strong>VIT</strong>
+<small>Research connections</small>
+</span>
+</a>
+<nav aria-label="Main navigation">
+<a {% if request.endpoint=='collaborators' %}aria-current="page"{% endif %} href="{{ url_for('collaborators') }}">Find collaborators</a>
+<a {% if request.endpoint in ['directory','faculty_profile'] %}aria-current="page"{% endif %} href="{{ url_for('directory') }}">Faculty</a>
+<a {% if request.endpoint=='publications' %}aria-current="page"{% endif %} href="{{ url_for('publications') }}">Publications</a>
+<a href="{{ url_for('entities',kind='labs') }}">Labs</a>
+<a href="{{ url_for('entities',kind='projects') }}">Projects</a>
+</nav>
+<div class="account-nav">{% if current_user %}<span class="account-name">{{ current_user.username }}</span>
+<form method="post" action="{{ url_for('logout') }}" class="logout-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<button type="submit">Sign out</button>
+</form>{% else %}<a href="{{ url_for('login') }}">Sign in</a>{% endif %}</div>
+</div>
+</header>
+<div class="scope-bar">
+<div>
+<span class="status-dot" aria-hidden="true">
+</span> VIT Vellore <span class="scope-separator">/</span> Selected SCOPE &amp; SCORE faculty<a href="{{ url_for('about') }}">Sources &amp; coverage <span aria-hidden="true">↗</span>
+</a>
+</div>
+</div>
+<main id="main" tabindex="-1">{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="notice">{{ message }}</div>{% endfor %}{% endwith %}{% block content %}{% endblock %}</main>
+<footer class="site-footer">
+<span>VIT Research connections</span>
+<a href="{{ url_for('about') }}">About the collected records</a>
+</footer>
+</body>
+</html>

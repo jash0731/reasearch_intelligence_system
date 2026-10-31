@@ -1,0 +1,24 @@
+{
+  "contract_version": 2,
+  "status": "complete",
+  "batch_id": "batch_001_directory",
+  "schema_version": 2,
+  "generated_at": "2026-10-19T16:56:01.575277+00:00",
+  "scope": {
+    "campus": "Vellore",
+    "schools": [
+      "SCOPE",
+      "SCORE"
+    ],
+    "people": "faculty"
+  },
+  "collection_stage": "DIRECTORY_ONLY",
+  "files": {
+    "faculty_directory.json": {
+      "rows": 337,
+      "sha256": "3ce3df8ff1fde3f1e814f7c3ca455b8d97a9fb7a897048d1e260f285643dcd56"
+    }
+  },
+  "external_author_verification": "PENDING",
+  "publication_retrieval": "NOT_ATTEMPTED"
+}

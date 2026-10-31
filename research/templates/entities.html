@@ -1,0 +1,56 @@
+{% extends 'base.html' %}{% from 'macros.html' import tags %}{% block title %}{{ 'Labs' if kind=='labs' else 'Projects' }}{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<h1>{{ 'Labs & facilities' if kind=='labs' else 'Reported projects' }}</h1>
+<p class="lead">{% if kind=='labs' %}Officially documented labs and facilities, their research areas and recorded faculty members.{% else %}Funded research and consultancy reported on official faculty profiles.{% endif %}</p>
+</div>
+</div>
+<form class="search-bar" method="get">
+<div class="search-field">
+<label for="q">{{ 'Lab or facility keyword' if kind=='labs' else 'Project title, faculty or funder' }}</label>
+<input id="q" name="q" type="search" value="{{ q|default('') }}" placeholder="Search collected {{ kind }}">
+</div>
+<button class="button" type="submit">Search</button>
+</form>
+{% if kind == 'projects' %}
+<p class="coverage-note top-note">Matching titles are grouped; project identity is unconfirmed. Source details are shown separately. “Ongoing” reflects the source’s wording.</p>
+<div class="results-heading">
+<h2>{{ items|length }} title {{ 'group' if items|length == 1 else 'groups' }}</h2>
+<span class="meta">Alphabetical order · A–Z</span>
+</div>
+<div class="entity-grid">
+{% for item in items %}
+<article class="entity-card">
+<p class="eyebrow">{{ item.reports|length }} {{ 'profile report' if item.reports|length == 1 else 'grouped profile reports' }}</p>
+<h2>{{ item.title }}</h2>
+{% for report in item.reports %}
+<div class="match-section">
+<p class="meta">Type: {{ report.kind|default('Not reported',true)|lower }}</p>
+<p class="meta">Reported faculty: {{ report.faculty_names|default('Not recorded',true) }}</p>
+<p class="meta">Funder: {{ report.funder_name|default('Not reported',true) }}</p>
+<p class="meta">Source status: {{ report.source_reported_status|default('Not reported',true)|lower }}</p>
+{% if report.official_url or report.source_url %}
+<a class="text-link" href="{{ report.official_url|default(report.source_url,true) }}" target="_blank" rel="noopener noreferrer">Official source ↗</a>
+{% endif %}
+</div>
+{% endfor %}
+</article>
+{% else %}
+<div class="empty-state">
+<h2>No project reports match your search.</h2>
+<p>Search by project title, reported faculty or funder.</p>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="entity-grid">{% for item in items %}<article class="entity-card">
+<p class="eyebrow">{{ item.school_code|default(item.kind|default('Research',true),true) }}</p>
+<h2>{{ item.name|default(item.title,true) }}</h2>{% if item.description %}<p>{{ item.description }}</p>{% endif %}{{ tags(item.areas|default([],true)) }}{% if item.funder_name or item.funder %}<p class="meta">Funder: {{ item.funder_name|default(item.funder,true) }}</p>{% endif %}{% if item.faculty_names %}<p class="meta">Reported faculty: {{ item.faculty_names if item.faculty_names is string else item.faculty_names|join(', ') }}</p>{% endif %}{% if item.source_reported_status %}<p class="meta">Source status: {{ item.source_reported_status|lower }}</p>{% endif %}{% if item.members %}<div class="match-section">
+<h3>Recorded faculty</h3>
+<ul class="member-list">{% for member in item.members %}<li>
+<a href="{{ url_for('faculty_profile',faculty_id=member.id) }}">{{ member.name }}</a>{% if member.role %}<span class="meta"> · {{ member.role }}</span>{% endif %}</li>{% endfor %}</ul>
+</div>{% endif %}{% if kind == 'labs' and not item.members %}<p class="meta">Faculty membership is not documented in this collection.</p>{% endif %}{% set contact_email=item.contact_email|default(item.email,true) %}{% if contact_email %}<a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{% endif %}{% if item.official_url or item.source_url %}<a class="text-link" href="{{ item.official_url|default(item.source_url,true) }}" target="_blank" rel="noopener noreferrer">Official source ↗</a>{% endif %}</article>{% else %}<div class="empty-state">
+<h2>{% if kind=='labs' %}No lab records match these filters.{% else %}No project records match these filters.{% endif %}</h2>
+<p>{% if kind=='labs' %}We list a lab only when an official source identifies it. Faculty membership is never inferred from shared interests or coauthorship.{% else %}Projects appear after they have been collected and linked to their documented participants.{% endif %}</p>
+<a href="{{ url_for('directory') }}">Explore faculty research interests →</a>
+</div>{% endfor %}</div>{% endif %}
+{% endblock %}

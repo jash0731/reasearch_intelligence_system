@@ -1,0 +1,51 @@
+{% extends 'base.html' %}{% block title %}Sources and coverage{% endblock %}{% block content %}<div class="page-heading narrow">
+<div>
+<h1>Sources &amp; coverage</h1>
+</div>
+</div>
+<div class="about-layout">
+<section class="surface">
+<h2>What is included?</h2>
+<p>Selected faculty from the School of Computer Science and Engineering (SCOPE) and School of Computer Science Engineering and Information Systems (SCORE), VIT Vellore. This is a curated collection, not a complete institutional roster. Selection checked whether profile data could be extracted and external author identities could be matched; it did not verify when every VIT page was last updated.</p>{% if coverage %}<dl class="coverage-grid">{% for key,value in coverage.items() %}{% if value is number %}<div>
+<dt>{{ key|replace('_',' ')|capitalize }}</dt>
+<dd>{{ value }}</dd>
+</div>{% endif %}{% endfor %}</dl>{% endif %}<h2>How the records are collected</h2>
+<ul class="prose-list">
+<li>
+<strong>Official VIT pages</strong> provide names, designations, departments, qualifications, research interests and outbound research-profile links.</li>
+<li>
+<strong>Publication providers</strong> provide work metadata after an author identity has been checked. A link on a faculty page is a source claim, not sufficient proof of an author match. The accepted OpenAlex author profile is matched by ORCID, compatible name and VIT affiliation; this does not verify every publication individually.</li>
+<li>
+<strong>Faculty profile contributions</strong> provide reported project and patent observations. Unknown dates and roles remain unknown.</li>
+<li>
+<strong>Monthly research circulars</strong> record what VIT announced in that reporting month. They are a historical source archive and have not been imported into this collection yet; they are not a complete record of everyone’s work.</li>
+</ul>{% if departments %}<h2>Faculty by department</h2>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th scope="col">School</th>
+<th scope="col">Department</th>
+<th scope="col">Faculty</th>
+</tr>
+</thead>
+<tbody>{% for dept in departments %}<tr>
+<td>{{ dept.school_code }}</td>
+<td>{{ dept.department_name }}</td>
+<td>{{ dept.count }}</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>{% endif %}</section>
+<aside class="surface">
+<h2>How matching works</h2>
+<p>Research interests are matched through shared database terms. Publication keywords match the collected text. Department and school filters narrow the results.</p>
+<p>
+<strong>One coauthor step</strong> means OpenAlex lists both matched author profiles on a paper. <strong>Two steps</strong> means a recorded mutual author profile connects them; the interface shows that person and both papers. Individual paper records have not been manually reviewed.</p>
+<p>No direct or two-step path in this database does not establish that the faculty have never collaborated.</p>
+<div class="form-rule">
+</div>
+<h2>Reading the numbers</h2>
+<p>Missing metrics are unavailable, never zero by default. h-index, i10-index and citations retain their provider and retrieval date. Retrieval is when we checked the source, not necessarily when it calculated a metric. VIT, OpenAlex and Google Scholar can report different values because they index and count different records. Google Scholar is an outbound link; its profile and metrics are not copied into this site.</p>
+<p>Research metrics do not determine the collaborator matches. Journal impact factors are outside this version.</p>
+</aside>
+</div>{% endblock %}

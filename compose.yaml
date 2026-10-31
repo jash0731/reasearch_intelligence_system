@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      target: runtime
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set a random SECRET_KEY in .env}
+      DATABASE_URL: postgresql+psycopg://vit_app:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/vit_research_app
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?Set DEMO_PASSWORD with at least 12 characters in .env}
+      APP_HOST: 0.0.0.0
+      APP_PORT: 5000
+      COOKIE_SECURE: "false"
+      DATA_LABEL: "Selected VIT Vellore SCOPE and SCORE faculty"
+    ports:
+      - "${COMPOSE_APP_PORT:-5050}:5000"
+    volumes:
+      - vit_app_instance:/app/instance
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  tests:
+    profiles: [test]
+    build:
+      context: .
+      target: test
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+      TEST_DATABASE_URL: postgresql+psycopg://vit_app:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/vit_research_test
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: vit_research
+      POSTGRES_USER: vit_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - vit_research_data:/var/lib/postgresql/data
+      - ./scripts/init_databases.sql:/docker-entrypoint-initdb.d/02-workspace.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vit_app -d vit_research"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  vit_research_data:
+  vit_app_instance:

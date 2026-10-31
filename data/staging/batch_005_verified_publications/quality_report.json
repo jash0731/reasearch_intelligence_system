@@ -1,0 +1,30 @@
+{
+  "attempted_faculty": 337,
+  "verified_faculty": 194,
+  "faculty_with_papers": 194,
+  "unique_publications_since_2019": 4391,
+  "verified_authorships": 4740,
+  "direct_internal_coauthor_pairs": 129,
+  "reviews": 143,
+  "collection_statuses": {
+    "RETRIEVED": 194
+  },
+  "review_reasons": {
+    "NO_CACHED_RESPONSE": 84,
+    "DISPLAYED_NAME_CONFLICT": 27,
+    "NO_VIT_AFFILIATION_EVIDENCE": 18,
+    "MULTIPLE_PROVIDER_ORCIDS_NEEDS_REVIEW": 9,
+    "NO_ORCID; Scholar outbound link retained, no author search guessed": 5
+  },
+  "source": "data/collection_v2/vellore_directory_2026-10-19/directory_candidates.json",
+  "publication_reviews": 179,
+  "generated_at": "2026-10-20T05:44:40.622136+00:00",
+  "provider": "OpenAlex",
+  "api_requests": 0,
+  "notes": [
+    "ORCID exact match, compatible displayed name and VIT affiliation required. Vellore school evidence comes from official directory.",
+    "Publication coverage since 2019; provider career metrics cover provider full author profile.",
+    "No Google Scholar scraping. No inferred labs, interests, or supervision.",
+    "Exact DOI duplicates suppressed; originals retained in response cache and publication_reviews. Untitled provider rows held."
+  ]
+}

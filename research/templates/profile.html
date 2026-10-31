@@ -1,0 +1,66 @@
+{% extends 'base.html' %}{% from 'macros.html' import tags,paper,person_meta %}{% block title %}{{ faculty.name }}{% endblock %}{% block content %}
+<a class="back-link" href="{{ url_for('directory') }}">← Faculty directory</a>
+<section class="profile-heading">
+<div>
+<p class="eyebrow">{{ faculty.school_code }} · {{ faculty.department_name }}</p>
+<h1>{{ faculty.name }}</h1>{{ person_meta(faculty) }}<div class="profile-contact">{% if faculty.email %}<a href="mailto:{{ faculty.email }}">{{ faculty.email }}</a>{% endif %}{% if faculty.profile_url %}<a href="{{ faculty.profile_url }}" target="_blank" rel="noopener noreferrer">Official VIT profile ↗</a>{% endif %}</div>
+</div>
+<a class="button" href="{{ url_for('collaborators',faculty_id=faculty.id) }}">Find collaborators →</a>
+</section>
+{% if areas %}<section class="profile-interests">
+<h2>Research interests</h2>{{ tags(areas) }}</section>{% endif %}
+<div class="profile-layout">
+<div class="profile-main">
+<section class="content-section">
+<div class="section-heading">
+<h2>Publications</h2>{% if papers %}<span class="count-pill">{{ papers|length }} collected works</span>{% endif %}</div>{% if papers %}<p class="section-description">Publications come from a matched OpenAlex author profile. Individual papers have not been manually checked; coverage may be incomplete.</p>
+<ul class="paper-list">{% for item in papers %}{{ paper(item) }}{% endfor %}</ul>{% else %}<div class="inline-empty">
+<h3>Publication records are not available yet.</h3>
+<p>{% if faculty.publication_collection_status == 'IDENTITY_REVIEW' %}The external author identity needs review before we attach papers.{% elif faculty.publication_collection_status == 'FETCH_FAILED' %}Publication collection could not be completed for this profile.{% else %}An official profile is available, but its publication collection has not been completed.{% endif %} This does not mean the researcher has no publications.</p>
+</div>{% endif %}</section>
+{% if projects %}<section class="content-section">
+<h2>Reported projects &amp; consultancy</h2>
+<p class="section-description">Reported on the faculty profile. “Ongoing” does not confirm current activity.</p>
+<ul class="record-list">{% for item in projects %}<li>
+<h3>{{ item.title }}</h3>
+<p class="meta">{{ item.kind|default('Project',true) }}{% if item.funder_name or item.funder %} · {{ item.funder_name|default(item.funder,true) }}{% endif %}{% if item.source_reported_status %} · Source status: {{ item.source_reported_status|lower }}{% endif %}</p>{% if item.source_url %}<a class="small-link" href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">View source ↗</a>{% endif %}</li>{% endfor %}</ul>
+</section>{% endif %}
+{% if patents %}<section class="content-section">
+<h2>Reported patents</h2>
+<p class="section-description">Source observations; multiple entries may refer to the same application.</p>
+<ul class="record-list">{% for item in patents %}<li>
+<h3>{{ item.title }}</h3>
+<p class="meta">{{ item.status|default('Status unavailable',true) }}{% if item.application_no %} · Application {{ item.application_no }}{% endif %}{% if item.patent_no %} · Patent {{ item.patent_no }}{% endif %}</p>
+</li>{% endfor %}</ul>
+</section>{% endif %}</div>
+<aside class="profile-sidebar">
+<section class="side-section">
+<h2>Academic qualifications</h2>{% for item in qualifications %}<div class="qualification">
+<h3>{{ item.qualification }}</h3>{% if item.institution %}<p>{{ item.institution }}</p>{% endif %}{% if item.graduation_year %}<span class="meta">{{ item.graduation_year }}</span>{% endif %}{% if item.source_text and not item.institution %}<p class="meta">{{ item.source_text }}</p>{% endif %}</div>{% else %}<p class="muted">Not available in collected records.</p>{% endfor %}</section>
+<section class="side-section">
+<h2>Research profiles</h2>
+<p class="section-description">Links supplied by the official faculty page.</p>
+<ul class="external-profile-list">{% for item in external_profiles %}<li>
+<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.provider }} <span aria-hidden="true">↗</span>
+</a>{% if item.identity_match_status == 'VERIFIED' %}<span class="verification-label">{% if item.provider == 'openalex' %}Author profile match checked{% elif item.provider == 'orcid' %}ORCID matched to author profile{% else %}Identity checked{% endif %}</span>{% endif %}</li>{% else %}<li class="muted">No research-profile links collected.</li>{% endfor %}</ul>
+</section>
+<section class="side-section">
+<h2>Research metrics</h2>{% for metric in metrics %}<div class="metric-snapshot">
+<p class="metric-provider">{{ metric.provider }}</p>
+<dl class="metrics-grid">
+<div>
+<dt>h-index</dt>
+<dd>{{ metric.h_index if metric.h_index is not none else '—' }}</dd>
+</div>
+<div>
+<dt>i10-index</dt>
+<dd>{{ metric.i10_index if metric.i10_index is not none else '—' }}</dd>
+</div>{% if metric.cited_by_count is not none %}<div>
+<dt>Citations</dt>
+<dd>{{ metric.cited_by_count }}</dd>
+</div>{% endif %}</dl>
+<p class="meta">{% if metric.provider.startswith('VIT faculty profile') %}VIT page checked{% else %}Provider snapshot retrieved{% endif %} {{ (metric.observed_at|string)[:10] }}{% if metric.metric_as_of %} · Metric date {{ metric.metric_as_of }}{% endif %}</p>{% if metric.source_url %}<a class="small-link" href="{{ metric.source_url }}" target="_blank" rel="noopener noreferrer">Metric source ↗</a>{% endif %}</div>{% else %}<p class="muted">Metrics unavailable. Missing values are not zero.</p>{% endfor %}<p class="field-hint">Metrics are provider snapshots, separate from this collection’s paper count. Dates are unavailable where not supplied.</p>
+</section>
+</aside>
+</div>
+{% endblock %}

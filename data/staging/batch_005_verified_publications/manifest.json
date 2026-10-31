@@ -1,0 +1,12 @@
+{
+  "contract_version": 2,
+  "status": "complete",
+  "batch_id": "batch_005_verified_publications",
+  "generated_at": "2026-10-20T05:44:40.626552+00:00",
+  "files": {
+    "enrichment.json": {
+      "rows": 4391,
+      "sha256": "bf7ce37687c6b8f1d26a95601928c170a13d7a6988af2087655f9c83c7f30287"
+    }
+  }
+}

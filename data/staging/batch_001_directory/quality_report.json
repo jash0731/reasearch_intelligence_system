@@ -1,0 +1,11 @@
+{
+  "faculty_candidates": 337,
+  "by_school": {
+    "SCOPE": 222,
+    "SCORE": 115
+  },
+  "external_author_verification": "PENDING",
+  "publication_retrieval": "NOT_ATTEMPTED",
+  "raw_mobile_numbers_included": false,
+  "live_database_changed": false
+}

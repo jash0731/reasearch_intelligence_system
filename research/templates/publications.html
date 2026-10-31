@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% from 'macros.html' import paper %}{% block title %}Publications{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<h1>Publications</h1>
+<p class="lead">Publications linked to matched faculty author profiles.</p>
+</div>
+</div>
+<form class="search-bar" method="get">
+<div class="search-field">
+<label for="q">Publication title keyword</label>
+<input id="q" type="search" name="q" value="{{ q|default('') }}" placeholder="Search a publication title">
+</div>
+<button class="button" type="submit">Search publications</button>
+</form>
+<section class="surface">
+<div class="results-heading">
+<h2>{{ papers|length }} records{% if total is defined %} · {{ total }} in collection{% endif %}</h2>
+<span class="meta">{% if page is defined %}Page {{ page }}{% endif %}</span>
+</div>{% if papers %}<ul class="paper-list">{% for item in papers %}{{ paper(item) }}{% endfor %}</ul>{% else %}<div class="empty-state">
+<h2>No publication records found.</h2>
+<p>{% if q %}Try a broader keyword.{% else %}No publications have been collected yet.{% endif %}</p>
+</div>{% endif %}{% if has_next|default(false) %}<a class="button button-secondary" href="{{ url_for('publications',q=q,page=page+1) }}">Next page →</a>{% endif %}</section>
+<p class="coverage-note">A partial collection cannot establish a researcher's complete output. Citation counts, when available, are dated provider observations.</p>{% endblock %}

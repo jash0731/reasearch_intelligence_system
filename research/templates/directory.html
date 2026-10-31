@@ -1,0 +1,39 @@
+{% extends 'base.html' %}{% from 'macros.html' import tags,person_meta %}{% block title %}Selected faculty{% endblock %}{% block content %}
+<div class="page-heading">
+<div>
+<p class="eyebrow">VIT Vellore · SCOPE &amp; SCORE</p>
+<h1>Faculty directory</h1>
+</div>
+<span class="count-pill">{{ faculty|length }} {% if total is defined and total != faculty|length %}of {{ total }} {% endif %}profiles</span>
+</div>
+<form class="search-bar" method="get">
+<div class="search-field">
+<label for="q">Name or research interest</label>
+<input id="q" name="q" type="search" value="{{ q|default(filters.q|default('')) }}" placeholder="Search faculty or a research area">
+</div>
+<div>
+<label for="school">School</label>
+<select id="school" name="school">
+<option value="">Both schools</option>{% for school in schools %}<option value="{{ school.code }}" {% if filters.school|default('') == school.code %}selected{% endif %}>{{ school.code }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="department">Department</label>
+<select id="department" name="department">
+<option value="">All departments</option>{% for dept in departments %}<option value="{{ dept.id }}" {% if filters.department|string == dept.id|string %}selected{% endif %}>{{ dept.name }}</option>{% endfor %}</select>
+</div>
+<button class="button" type="submit">Search</button>
+</form>
+<div class="directory-grid">{% for person in faculty %}<article class="faculty-card">
+<div class="faculty-school">{{ person.school_code }}</div>
+<h2>
+<a href="{{ url_for('faculty_profile',faculty_id=person.id) }}">{{ person.name }}</a>
+</h2>{{ person_meta(person) }}{{ tags(person.interests|default([],true)) }}<div class="faculty-card-bottom">
+<a class="text-link" href="{{ url_for('faculty_profile',faculty_id=person.id) }}">View profile →</a>
+<a href="{{ url_for('collaborators',faculty_id=person.id) }}">Find connections</a>
+</div>
+</article>{% else %}<div class="empty-state">
+<h2>No faculty match these filters.</h2>
+<p>Try a broader name or research term.</p>
+<a href="{{ url_for('directory') }}">Clear filters</a>
+</div>{% endfor %}</div>{% if has_next|default(false) %}<a class="button button-secondary" href="{{ url_for('directory',q=q|default(''),school=filters.school,department=filters.department,page=page+1) }}">Next page →</a>{% endif %}<p class="coverage-note">This is a curated research collection, not a complete faculty roster. External profile links are recorded separately from verified publication identities.</p>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% macro tags(items) %}<div class="tags">{% for item in items|default([],true) %}<span class="tag">{{ item.name if item is mapping else item }}</span>{% endfor %}</div>{% endmacro %}
+{% macro paper(item) %}<li class="paper-item">
+<div>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.title }} <span class="external" aria-hidden="true">↗</span>
+</a>{% else %}<span>{{ item.title }}</span>{% endif %}</div>
+<p class="meta">{{ item.year|default('Year unavailable',true) }}{% if item.venue_name %} · {{ item.venue_name }}{% endif %}{% if item.doi %} · DOI: {{ item.doi }}{% endif %}</p>{% if item.faculty_names %}<p class="paper-authors">Selected faculty: {{ item.faculty_names if item.faculty_names is string else item.faculty_names|join(', ') }}</p>{% endif %}</li>{% endmacro %}
+{% macro person_meta(person) %}<p class="person-role">{{ person.designation|default('Faculty',true) }}</p>
+<p class="meta">{{ person.department_name|default('Department unavailable',true) }}{% if person.school_code %} <span aria-hidden="true">·</span> {{ person.school_code }}{% endif %}</p>{% endmacro %}

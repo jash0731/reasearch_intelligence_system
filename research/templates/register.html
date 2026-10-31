@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% block title %}Link a faculty profile{% endblock %}{% block content %}<div class="auth-layout">
+<section class="auth-intro">
+<h1>Create a demo account</h1>
+<p class="lead">Create a demo account linked to a faculty record. This does not verify your identity or ownership of the profile.</p>
+</section>
+<section class="auth-card">
+<h2>Link a faculty profile</h2>{% if error %}<div class="error-message" role="alert">{{ error }}</div>{% endif %}<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<label for="faculty_id">Your faculty profile</label>
+<select id="faculty_id" name="faculty_id" required>
+<option value="">Choose your official profile</option>{% for person in faculty %}<option value="{{ person.id }}">{{ person.name }} · {{ person.school_code }}</option>{% endfor %}</select>
+<label for="email">Institutional email</label>
+<input id="email" name="email" type="email" autocomplete="email" placeholder="name@vit.ac.in">
+<p class="field-hint">Use the institutional email recorded on your official profile.</p>
+<label for="username">Choose a username</label>
+<input id="username" name="username" required minlength="3" autocomplete="username">
+<label for="password">Choose a password · 12 characters minimum</label>
+<input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+<button class="button button-full" type="submit">Create linked account →</button>
+</form>
+<p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+</p>
+</section>
+</div>{% endblock %}
